@@ -80,31 +80,22 @@ Oyun sonlanır ve son durum gösterilir.
 Karakter Tabanli Hayatta Kalma Simulasyonuna Hos Geldiniz!
 Baslangic Durumu -> Saglik: 100 Enerji: 80 Yemek: 2 Siginak: 0
 
-shell
-Kodu kopyala
-
 ### Avlanma:
 Avlanmaya ciktin... Enerjin 10 azaldi. (Yeni enerji: 70)
 Hava guzel ve dikkatlisin. Av sansin yuksek!
 Bir av yakaladin! Yemek +1 (Toplam yemek: 3)
 
-shell
-Kodu kopyala
 
 ### Tehlike Dalga Simülasyonu:
 Adim 3 -> Tehlike seviyesi: 6
 Yuksek tehlike! Bir miktar hasar aldın.
 
-shell
-Kodu kopyala
 
 ### Şifreli Kapı:
 Sifreyi gir (4 haneli): 0000
 Yanlis sifre! Kapı acilmadi.
 Ipucu: Sifre ardışık sayilardan olusuyor.
 
-yaml
-Kodu kopyala
 
 ---
 
@@ -114,15 +105,10 @@ Linux / macOS:
 gcc main.c -o simulasyon
 ./simulasyon
 
-scss
-Kodu kopyala
 
 Windows (MinGW):
 gcc main.c -o simulasyon
 simulasyon.exe
-
-yaml
-Kodu kopyala
 
 ---
 
@@ -131,8 +117,6 @@ Kodu kopyala
 main.c → Programın ana kaynak kodu
 README.md → Proje açıklama dosyası
 
-yaml
-Kodu kopyala
 
 ---
 
