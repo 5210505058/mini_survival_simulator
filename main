@@ -1,0 +1,222 @@
+#include <stdio.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+/*
+    KARAKTER TABANLI HAYATTA KALMA SİMÜLATÖRÜ
+    Komutlar:
+    A – Avlan
+    S – Sığınak ara
+    R – Envanter / Durum göster
+    E – Dinlen
+    F – Bölgedeki tehlike dalgasını simüle et (FOR ile)
+    P – Şifreli ilerleme (DO-WHILE ile doğrulama)
+    X – Çıkış
+*/
+
+void durumGoster(int saglik, int enerji, int yemek, int siginakGuv);
+void avlan(int *saglik, int *enerji, int *yemek);
+void siginakAra(int *siginakGuv, int enerji);
+void dinlen(int *saglik, int *enerji);
+void tehlikeDalgasi(int *saglik);
+void sifreliEngel(void);
+
+int main(void)
+{
+    int saglik  = 100;
+    int enerji  = 80;
+    int yemek   = 2;
+    int siginakGuv = 0;
+
+    char komut;
+
+    srand((unsigned int)time(NULL));
+
+    printf("Karakter Tabanli Hayatta Kalma Simulasyonuna Hos Geldiniz!\n");
+    printf("Baslangic Durumu -> Saglik: %d  Enerji: %d  Yemek: %d  Siginak: %d\n\n",
+           saglik, enerji, yemek, siginakGuv);
+
+    do {
+        printf("\nKomut Giriniz (A,S,R,E,F,P,X): ");
+        scanf(" %c", &komut);
+
+        switch (komut) {
+            case 'A':
+            case 'a':
+                avlan(&saglik, &enerji, &yemek);
+                break;
+
+            case 'S':
+            case 's':
+                siginakAra(&siginakGuv, enerji);
+                break;
+
+            case 'R':
+            case 'r':
+                durumGoster(saglik, enerji, yemek, siginakGuv);
+                break;
+
+            case 'E':
+            case 'e':
+                dinlen(&saglik, &enerji);
+                break;
+
+            case 'F':
+            case 'f':
+                tehlikeDalgasi(&saglik);
+                break;
+
+            case 'P':
+            case 'p':
+                sifreliEngel();
+                break;
+
+            case 'X':
+            case 'x':
+                printf("\nOyundan cikiliyor...\n");
+                break;
+
+            default:
+                printf("Gecersiz komut girdiniz.\n");
+                break;
+        }
+
+        if (saglik <= 0) {
+            printf("\n>>> Sagligin sifirlandi. Karakter hayatta kalamadi.\n");
+            break;
+        }
+        if (enerji <= 0) {
+            printf("\n>>> Enerjin tükendi. Karakter hareket edemiyor.\n");
+            break;
+        }
+
+    } while (komut != 'X' && komut != 'x');
+
+    printf("\nSon Durum:\n");
+    durumGoster(saglik, enerji, yemek, siginakGuv);
+    printf("Simulasyon sonlandi.\n");
+
+    return 0;
+}
+
+void durumGoster(int saglik, int enerji, int yemek, int siginakGuv)
+{
+    printf("\n=== KARAKTER DURUMU ===\n");
+    printf("Saglik : %d\n", saglik);
+    printf("Enerji : %d\n", enerji);
+    printf("Yemek  : %d\n", yemek);
+    printf("Siginak guvenligi : %d\n", siginakGuv);
+    printf("=======================\n");
+}
+
+void avlan(int *saglik, int *enerji, int *yemek)
+{
+    *enerji -= 10;
+    if (*enerji < 0) *enerji = 0;
+
+    printf("\nAvlanmaya ciktin... Enerjin 10 azaldi. (Yeni enerji: %d)\n", *enerji);
+
+    int havaGunesli   = rand() % 2;
+    int oyuncuDikkatli = rand() % 2;
+
+    if (havaGunesli && oyuncuDikkatli) {
+        printf("Hava guzel ve dikkatlisin. Av sansin yuksek!\n");
+        (*yemek)++;
+        printf("Bir av yakaladin! Yemek +1 (Toplam yemek: %d)\n", *yemek);
+    }
+    else if (havaGunesli || oyuncuDikkatli) {
+        printf("Sartlar orta, dikkatli olmalisin.\n");
+        int sans = rand() % 100;
+        if (sans < 50) {
+            (*yemek)++;
+            printf("Kisitli da olsa bir seyler buldun. Yemek +1 (Toplam yemek: %d)\n", *yemek);
+        } else {
+            printf("Uzun sure ugrastin ama hicbir sey bulamadın.\n");
+        }
+    }
+    else {
+        printf("Hava kotu ve dikkat da daginik... Ciddi risk altindasin!\n");
+        int sans = rand() % 100;
+        if (sans < 30) {
+            (*yemek)++;
+            printf("Sans eseri bir av yakaladın! Yemek +1 (Toplam yemek: %d)\n", *yemek);
+        } else {
+            printf("Avlanirken yaralandin!\n");
+            *saglik -= 15;
+            if (*saglik < 0) *saglik = 0;
+            printf("Sagligin azaldi. (Yeni saglik: %d)\n", *saglik);
+        }
+    }
+}
+
+void siginakAra(int *siginakGuv, int enerji)
+{
+    printf("\nCevrede siginak ariyorsun...\n");
+
+    int bolgeOrman   = rand() % 2;
+    int yakinMagara  = rand() % 2;
+
+    if ((bolgeOrman || yakinMagara) && enerji > 20) {
+        printf("Cevrede gizlenebilecegin bir yer buldun.\n");
+        if (*siginakGuv < 2) (*siginakGuv)++;
+    } else {
+        printf("Uygun siginak bulamadın. Acik alandasın.\n");
+        if (*siginakGuv > 0) (*siginakGuv)--;
+    }
+
+    printf("Siginak guvenlik seviyesi: %d\n", *siginakGuv);
+}
+
+void dinlen(int *saglik, int *enerji)
+{
+    printf("\nDinlenme moduna gectin...\n");
+
+    *enerji += 8;
+    *saglik += 5;
+
+    if (*enerji > 100) *enerji = 100;
+    if (*saglik > 100) *saglik = 100;
+
+    printf("Dinlendin. Enerjin ve sagligin artti.\n");
+    printf("Yeni Enerji: %d, Yeni Saglik: %d\n", *enerji, *saglik);
+}
+
+void tehlikeDalgasi(int *saglik)
+{
+    int tehlikeSeviyesi = 0;
+    printf("\nBolgedeki tehlike dalgasini takip ediyorsun...\n");
+
+    for (int i = 1; i <= 5; i++) {
+        tehlikeSeviyesi += 2;
+        printf("Adim %d -> Tehlike seviyesi: %d\n", i, tehlikeSeviyesi);
+
+        if (tehlikeSeviyesi >= 6) {
+            printf("Yuksek tehlike! Bir miktar hasar aldın.\n");
+            *saglik -= 5;
+            if (*saglik < 0) *saglik = 0;
+        }
+    }
+
+    printf("Tehlike dalgasi sona erdi. Guncel saglik: %d\n", *saglik);
+}
+
+void sifreliEngel(void)
+{
+    const int DOGRU_SIFRE = 1234;
+    int girilenSifre;
+
+    printf("\nOnunde sifreli bir kapı var. Gecmek icin sifreyi girmelisin.\n");
+
+    do {
+        printf("Sifreyi gir (4 haneli) \n İpucu(ardışık sayı): ");
+        scanf("%d", &girilenSifre);
+
+        if (girilenSifre != DOGRU_SIFRE) {
+            printf("Yanlis sifre! Kapı acilmadi.\n");
+        }
+
+    } while (girilenSifre != DOGRU_SIFRE);
+
+    printf("Sifre dogru! Kapi acildi, bolgeden guvenle gectin.\n");
+}
